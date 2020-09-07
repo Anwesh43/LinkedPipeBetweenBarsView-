@@ -190,4 +190,26 @@ class PipeBetweenBarsView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : PipeBetweenBarsView) {
+
+        private val animator : Animator = Animator(view)
+        private val pbb : PipeBetweenBar = PipeBetweenBar(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            pbb.draw(canvas, paint)
+            animator.animate {
+                pbb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            pbb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
