@@ -13,16 +13,16 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.RectF
 
-val parts : Int = 4
+val parts : Int = 5
 val scGap : Float = 0.02f / parts
 val strokeFactor : Int = 90
 val sizeFactor : Float = 10.2f
 val colors : Array<Int> = arrayOf(
-        "",
-        "",
-        "",
-        "",
-        ""
+        "#B1AB04",
+        "#3296AB",
+        "#DE0456",
+        "#AB0998",
+        "#33CDE1"
 ).map({Color.parseColor(it)}).toTypedArray()
 val backColor : Int = Color.parseColor("#BDBDBD")
 val delay : Long = 20
@@ -32,6 +32,14 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
+fun Canvas.drawPipe(y : Float, h : Float, gap : Float, paint : Paint) {
+    for (j in 0..1) {
+        save()
+        translate(-gap / 2 + gap * j, y)
+        drawLine(0f, 0f, 0f, h, paint)
+        restore()
+    }
+}
 fun Canvas.drawPipeBetweenBars(scale : Float, w : Float, h : Float, paint : Paint) {
     val sf : Float = scale.sinify()
     val sf1 : Float = sf.divideScale(0, parts)
@@ -39,6 +47,7 @@ fun Canvas.drawPipeBetweenBars(scale : Float, w : Float, h : Float, paint : Pain
     val sf3 : Float = sf.divideScale(2, parts)
     val sf4 : Float = sf.divideScale(3, parts)
     val size : Float = Math.min(w, h) / sizeFactor
+    val hSize : Float = (h / 2 - size) * sf3
     save()
     translate(w / 2, h / 2)
     for (j in 0..1) {
@@ -46,7 +55,8 @@ fun Canvas.drawPipeBetweenBars(scale : Float, w : Float, h : Float, paint : Pain
         scale(1f, 1f - 2 * j)
         paint.style = Paint.Style.STROKE
         drawRect(RectF(-w / 2, h  / 2 - size, -w / 2 + w * sf1, h), paint)
-        drawRect(RectF(-size / 2, (h / 2 - size) * (1f - sf3) , size / 2, h / 2 - size), paint)
+        //drawRect(RectF(-size / 2, (h / 2 - size) * (1f - sf3) , size / 2, h / 2 - size), paint)
+        drawPipe(h / 2 - size - hSize, hSize, size, paint)
         paint.style = Paint.Style.FILL
         drawRect(RectF(-w / 2 + w / 2 * sf4, h / 2 - size, -w / 2 + w * sf2 - w / 2 * sf4, h / 2), paint)
         drawRect(RectF(-size / 2, (h / 2 - size) * (1 - sf4), size / 2, h / 2 - size), paint)
