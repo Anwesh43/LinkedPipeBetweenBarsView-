@@ -215,4 +215,13 @@ class PipeBetweenBarsView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : PipeBetweenBarsView {
+            val view : PipeBetweenBarsView = PipeBetweenBarsView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
